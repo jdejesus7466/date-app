@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>hey, quick question</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --night-1: #1a1033;
+    --night-2: #3a1d4d;
+    --dusk:    #7a3b6b;
+    --amber:   #f0954e;
+    --rose:    #ffb38a;
+    --cream:   #fff4e6;
+    --ink:     #2a1830;
+    --accent:  #ff6f91;
+    --gold:    #ffd27d;
+    --shadow:  rgba(20, 8, 30, 0.45);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; }
+
+  body {
+    font-family: "DM Sans", system-ui, sans-serif;
+    color: var(--cream);
+    background:
+      radial-gradient(120% 90% at 50% 115%, var(--amber) 0%, var(--dusk) 32%, var(--night-2) 62%, var(--night-1) 100%);
+    background-attachment: fixed;
+    height: 100dvh;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    overscroll-behavior: none;
+    position: relative;
+    text-align: center;
+    padding: 24px;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.05;
+    z-index: 50;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .glow {
+    position: fixed;
+    bottom: -32vmin;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90vmin;
+    height: 90vmin;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--gold) 0%, rgba(255,179,138,0.4) 40%, transparent 70%);
+    filter: blur(8px);
+    pointer-events: none;
+    z-index: 0;
+    animation: breathe 7s ease-in-out infinite;
+  }
+  @keyframes breathe {
+    0%, 100% { opacity: 0.85; transform: translateX(-50%) scale(1); }
+    50%       { opacity: 1;   transform: translateX(-50%) scale(1.05); }
+  }
+
+  .floaters { position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+  .floaters span {
+    position: absolute;
+    bottom: -40px;
+    font-size: 1.4rem;
+    opacity: 0;
+    animation: rise linear infinite;
+  }
+  @keyframes rise {
+    0%   { transform: translateY(0) rotate(0deg) scale(0.8); opacity: 0; }
+    12%  { opacity: 0.55; }
+    100% { transform: translateY(-115vh) rotate(220deg) scale(1.1); opacity: 0; }
+  }
+
+  /* ---- card ---- */
+  .stage { position: relative; z-index: 10; width: min(640px, 100%); }
+
+  .card {
+    background: rgba(255, 244, 230, 0.06);
+    border: 1px solid rgba(255, 244, 230, 0.15);
+    border-radius: 28px;
+    padding: clamp(28px, 6vw, 52px);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 30px 80px -20px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.1);
+  }
+
+  .eyebrow {
+    font-size: 0.76rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--rose);
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.1s forwards;
+  }
+
+  h1 {
+    font-family: "Fraunces", serif;
+    font-weight: 600;
+    font-size: clamp(2rem, 6vw, 3.2rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease 0.25s forwards;
+  }
+  h1 em {
+    font-style: italic;
+    font-weight: 500;
+    color: var(--gold);
+  }
+
+  .subtitle {
+    font-size: clamp(0.95rem, 2.4vw, 1.1rem);
+    line-height: 1.6;
+    color: rgba(255, 244, 230, 0.75);
+    max-width: 44ch;
+    margin: 0 auto 36px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease 0.4s forwards;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---- question buttons ---- */
+  .buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    min-height: 60px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease 0.55s forwards;
+  }
+
+  button {
+    font-family: "DM Sans", sans-serif;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    border-radius: 999px;
+    padding: 15px 32px;
+    font-size: 1rem;
+    transition: transform 0.18s ease, box-shadow 0.22s ease, background 0.22s ease;
+  }
+
+  .yes {
+    background: linear-gradient(135deg, var(--accent), var(--amber));
+    color: #fff;
+    box-shadow: 0 12px 28px -8px rgba(255, 111, 145, 0.65);
+  }
+  .yes:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 18px 38px -10px rgba(255,111,145,0.8); }
+  .yes:active { transform: scale(0.97); }
+
+  .no {
+    background: rgba(255, 244, 230, 0.09);
+    color: var(--cream);
+    border: 1px solid rgba(255, 244, 230, 0.25);
+    position: relative;
+    z-index: 5;
+  }
+  .no:hover { background: rgba(255, 244, 230, 0.15); }
+
+  /* ---- category picker ---- */
+  #category-view, #option-view { display: none; }
+  #category-view.active, #option-view.active { display: block; animation: fadeUp 0.6s ease forwards; }
+
+  .picker-heading {
+    font-family: "Fraunces", serif;
+    font-size: clamp(1.5rem, 4.5vw, 2.3rem);
+    font-weight: 600;
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+  .picker-heading em { font-style: italic; font-weight: 500; color: var(--gold); }
+
+  .picker-sub {
+    font-size: 0.97rem;
+    color: rgba(255,244,230,0.68);
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
+  }
+
+  .cat-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 20px 12px;
+    border-radius: 18px;
+    background: rgba(255,244,230,0.07);
+    border: 1px solid rgba(255,244,230,0.14);
+    color: var(--cream);
+    font-size: 0.92rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.18s, border-color 0.18s, transform 0.15s;
+  }
+  .cat-btn:hover { background: rgba(255,244,230,0.14); border-color: rgba(255,244,230,0.3); transform: translateY(-2px); }
+  .cat-btn .cat-emoji { font-size: 1.9rem; }
+
+  /* ---- option picker ---- */
+  .option-grid {
+    display: grid;
+    gap: 11px;
+    margin-top: 4px;
+  }
+
+  .opt-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    border-radius: 16px;
+    background: rgba(255,244,230,0.07);
+    border: 1px solid rgba(255,244,230,0.13);
+    color: var(--cream);
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.18s, border-color 0.18s, transform 0.15s;
+  }
+  .opt-btn:hover { background: rgba(255,244,230,0.14); border-color: rgba(255,244,230,0.28); transform: translateX(3px); }
+  .opt-btn .opt-emoji { font-size: 1.4rem; flex-shrink: 0; }
+  .opt-btn .opt-name { font-weight: 600; font-size: 1rem; display: block; }
+  .opt-btn .opt-note { font-size: 0.83rem; color: rgba(255,244,230,0.6); margin-top: 2px; display: block; }
+
+  .back-link {
+    display: inline-block;
+    margin-top: 20px;
+    font-size: 0.85rem;
+    color: rgba(255,244,230,0.5);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: inherit;
+  }
+  .back-link:hover { color: rgba(255,244,230,0.8); }
+
+  /* ---- success ---- */
+  .success { display: none; flex-direction: column; align-items: center; gap: 12px; }
+  .success.show { display: flex; animation: fadeUp 0.8s ease forwards; }
+
+  .success .big {
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(2.1rem, 6.5vw, 3.4rem);
+    color: var(--gold);
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+  .success p { color: rgba(255,244,230,0.85); font-size: 1.05rem; line-height: 1.65; max-width: 44ch; }
+
+  .details {
+    margin-top: 18px;
+    display: grid;
+    gap: 11px;
+    width: 100%;
+    max-width: 380px;
+  }
+  .detail-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-align: left;
+    background: rgba(255,244,230,0.07);
+    border: 1px solid rgba(255,244,230,0.13);
+    border-radius: 16px;
+    padding: 14px 18px;
+  }
+  .detail-row .ico { font-size: 1.2rem; }
+  .detail-row .lbl { font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--rose); }
+  .detail-row .val { font-size: 0.97rem; font-weight: 500; }
+
+  #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 40; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+    .eyebrow, h1, .subtitle, .buttons { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+  <div class="glow"></div>
+  <div class="floaters" id="floaters" aria-hidden="true"></div>
+  <canvas id="confetti"></canvas>
+
+  <main class="stage">
+
+    <!-- STEP 1: the ask -->
+    <section class="card" id="question-view">
+      <p class="eyebrow">hi 👋 did you like my powerpoint? 😁</p>
+      <h1> do you want to go on a <em>date</em>?</h1>
+      <p class="subtitle">nothing crazy — just figured a website was the best way to end the slideshow</p>
+      <div class="buttons">
+        <button class="yes" id="yesBtn">yes, I'd love that 💛</button>
+        <button class="no" id="noBtn">no</button>
+      </div>
+    </section>
+
+    <!-- STEP 2: pick a category -->
+    <section class="card" id="category-view">
+      <p class="eyebrow">hooray! where to next? 👀</p>
+      <h2 class="picker-heading">so… what sounds <em>fun</em> to you?</h2>
+      <p class="picker-sub">i am also open to suggestions (i really just looked up fun stuff to do)</p>
+      <div class="category-grid" id="categoryGrid"></div>
+    </section>
+
+    <!-- STEP 3: pick a specific spot -->
+    <section class="card" id="option-view">
+      <p class="eyebrow" id="optionEyebrow">some ideas</p>
+      <h2 class="picker-heading" id="optionHeading">anywhere here <em>speak</em> to you?</h2>
+      <p class="picker-sub" id="optionSub"></p>
+      <div class="option-grid" id="optionGrid"></div>
+      <button class="back-link" id="backBtn">← actually, different vibe</button>
+    </section>
+
+    <!-- STEP 4: success -->
+    <section class="card success" id="success-view">
+      <div class="big">okay, it's a date 🎉</div>
+      <p id="successMessage"></p>
+      <div class="details" id="details"></div>
+    </section>
+
+  </main>
+
+<script>
+  const CATEGORIES = [
+    {
+      id: "dinner",
+      label: "Dinner",
+      emoji: "🍽️",
+      sub: "comfort food ,i mean what could be better?!",
+      options: [
+        { name: "Italian", note: "I mean can you hate italian food?", emoji: "🍝" },
+        { name: "Japanese", note: "Katsu is probably my weakness...", emoji: "🍣" },
+        { name: "American", note: "Mozzarella sticks are always a good time", emoji: "🍔" },
+        { name: "Mexican", note: "I know a thing or two about good tacos", emoji: "🌮" }
+      ]
+    },
+    {
+      id: "coffee",
+      label: "sweet treats!",
+      emoji: "☕",
+      sub: "the kind of place where you lose track of time",
+      options: [
+        { name: "Ice cream", note: "I know a great place for ice cream!", emoji: "🍦" },
+        { name: "Coffee", note: "Iced or hot, I'm not picky", emoji: "☕" },
+        { name: "Pastries", note: "Pastries always taste better warm", emoji: "🥐" },
+        { name: "Cake", note: "genuinely have no idea where to get a cake from", emoji: "🍰" }
+      ]
+    },
+    {
+      id: "games",
+      label: "Games",
+      emoji: "🎮",
+      sub: "something to keep our hands busy if conversation stalls",
+      options: [
+        { name: "Activate", note: "Nothing better than working as a team! or competing", emoji: "🕹️" },
+        { name: "Round1", note: "I think I can get you something from the claw machines", emoji: "🎳" },
+        { name: "K1 Speed", note: "Racing! could you imagine if we both suck at driving?", emoji: "🏎️" },
+        { name: "Escape Room", note: "Smart Joseph might have to make his appearance", emoji: "🚪" }
+      ]
+    }
+  ];
+
+  // ---- "No" button dodges ----
+  const noBtn = document.getElementById("noBtn");
+  const yesBtn = document.getElementById("yesBtn");
+  const noPhrases = [
+    "you sure?",
+    "really sure?",
+    "think about it…",
+    "last chance!",
+    "you can't catch me",
+    "just say yes 🙂",
+    "nope, try again",
+    "I'll keep moving",
+    "come on…",
+    "please? 🥺",
+    "we'd have fun",
+    "okay this is silly",
+    "I can do this all day",
+    "fine, I'll wait",
+    "still here",
+    "yes is right there →",
+    "missed me",
+    "too slow",
+    "you're warming up",
+    "I believe in you",
+    "almost!",
+    "so close",
+    "swing and a miss",
+    "I'll dodge forever",
+    "this is my hobby now",
+    "give in already",
+    "yes is bigger for a reason",
+    "the yes button misses you",
+    "I have hops",
+    "look over there 👀",
+    "psych",
+    "good try though",
+    "warmer…",
+    "colder.",
+    "you blink, I move",
+    "olympic-level dodging",
+    "I trained for this",
+    "we both know what you want",
+    "pretty please?",
+    "with sprinkles?",
+    "you're stalling",
+    "your move",
+    "this is round 17",
+    "I respect the effort",
+    "faster than your cursor",
+    "okay one more",
+    "is yes loading?",
+    "say yeesss with me",
+    "denied (by me)",
+    "the no button is on vacation"
+  ];
+  let noIdx = 0;
+  let yesScale = 1;
+
+  function dodge() {
+    noBtn.textContent = noPhrases[noIdx % noPhrases.length];
+    noIdx++;
+    yesScale = Math.min(yesScale + 0.06, 1.6);
+    yesBtn.style.transform = `scale(${yesScale})`;
+
+    // backdrop-filter on .card creates a containing block for fixed-position
+    // descendants — reparent to <body> so coords are truly viewport-relative.
+    if (noBtn.parentElement !== document.body) {
+      document.body.appendChild(noBtn);
+    }
+
+    const pad = 16;
+    const w = noBtn.offsetWidth, h = noBtn.offsetHeight;
+    const maxX = Math.max(pad, window.innerWidth  - w - pad);
+    const maxY = Math.max(pad, window.innerHeight - h - pad);
+    const x = pad + Math.random() * (maxX - pad);
+    const y = pad + Math.random() * (maxY - pad);
+    noBtn.style.position = "fixed";
+    noBtn.style.left = x + "px";
+    noBtn.style.top  = y + "px";
+    noBtn.style.zIndex = "30";
+  }
+
+  noBtn.addEventListener("mouseenter", dodge);
+  noBtn.addEventListener("click", (e) => { e.preventDefault(); dodge(); });
+  noBtn.addEventListener("touchstart", (e) => { e.preventDefault(); dodge(); }, { passive: false });
+
+  // ---- Step 1 → Step 2 ----
+  yesBtn.addEventListener("click", () => {
+    document.getElementById("question-view").style.display = "none";
+    // fully remove the no button — display:none alone wasn't always doing it once
+    // the button had been reparented to <body> during the dodge loop
+    noBtn.remove();
+    buildCategories();
+    document.getElementById("category-view").classList.add("active");
+  });
+
+  function buildCategories() {
+    const grid = document.getElementById("categoryGrid");
+    grid.innerHTML = "";
+    CATEGORIES.forEach(cat => {
+      const btn = document.createElement("button");
+      btn.className = "cat-btn";
+      btn.innerHTML = `<span class="cat-emoji">${cat.emoji}</span>${cat.label}`;
+      btn.addEventListener("click", () => showOptions(cat));
+      grid.appendChild(btn);
+    });
+  }
+
+  // ---- Step 2 → Step 3 ----
+  function showOptions(cat) {
+    document.getElementById("category-view").classList.remove("active");
+
+    document.getElementById("optionEyebrow").textContent = cat.label.toLowerCase();
+    document.getElementById("optionHeading").innerHTML   = `where sounds <em>good</em>?`;
+    document.getElementById("optionSub").textContent     = cat.sub;
+
+    const grid = document.getElementById("optionGrid");
+    grid.innerHTML = "";
+    cat.options.forEach(opt => {
+      const btn = document.createElement("button");
+      btn.className = "opt-btn";
+      btn.innerHTML = `
+        <span class="opt-emoji">${opt.emoji}</span>
+        <span>
+          <span class="opt-name">${opt.name}</span>
+          <span class="opt-note">${opt.note}</span>
+        </span>`;
+      btn.addEventListener("click", () => sayYes(cat, opt));
+      grid.appendChild(btn);
+    });
+
+    document.getElementById("option-view").classList.add("active");
+  }
+
+  document.getElementById("backBtn").addEventListener("click", () => {
+    document.getElementById("option-view").classList.remove("active");
+    document.getElementById("category-view").classList.add("active");
+  });
+
+  // ---- Step 3 → Step 4 ----
+  function sayYes(cat, opt) {
+    document.getElementById("option-view").classList.remove("active");
+
+    const sv = document.getElementById("success-view");
+    document.getElementById("successMessage").textContent =
+      "okay this genuinely made my day. here's the plan:";
+
+    const wrap = document.getElementById("details");
+    wrap.innerHTML = [
+      { ico: "📍", lbl: "Where", val: opt.name },
+      { ico: "💬", lbl: "What",  val: opt.note },
+      { ico: "🗓️", lbl: "When",  val: "Text me and find out 🫠" }
+    ].map(r => `
+      <div class="detail-row">
+        <span class="ico">${r.ico}</span>
+        <span>
+          <span class="lbl">${r.lbl}</span><br>
+          <span class="val">${r.val}</span>
+        </span>
+      </div>`).join("");
+
+    sv.classList.add("show");
+    launchConfetti();
+  }
+
+  // ---- floating hearts ----
+  (function spawnFloaters() {
+    const box = document.getElementById("floaters");
+    const glyphs = ["💛", "🧡", "❤️", "✨", "🌙"];
+    for (let i = 0; i < 16; i++) {
+      const s = document.createElement("span");
+      s.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+      s.style.left = Math.random() * 100 + "vw";
+      s.style.fontSize = (0.9 + Math.random() * 1.5) + "rem";
+      s.style.animationDuration = (10 + Math.random() * 10) + "s";
+      s.style.animationDelay = (Math.random() * 14) + "s";
+      box.appendChild(s);
+    }
+  })();
+
+  // ---- confetti ----
+  function launchConfetti() {
+    const c = document.getElementById("confetti");
+    const ctx = c.getContext("2d");
+    c.width = window.innerWidth; c.height = window.innerHeight;
+    const colors = ["#ff6f91", "#ffd27d", "#f0954e", "#ffb38a", "#fff4e6"];
+    const parts = Array.from({ length: 160 }, () => ({
+      x:  Math.random() * c.width,
+      y: -20 - Math.random() * c.height * 0.5,
+      r:  4 + Math.random() * 7,
+      c:  colors[Math.floor(Math.random() * colors.length)],
+      vx: -2 + Math.random() * 4,
+      vy:  2 + Math.random() * 4,
+      a:  Math.random() * Math.PI,
+      va: -0.2 + Math.random() * 0.4
+    }));
+    let frames = 0;
+    (function frame() {
+      ctx.clearRect(0, 0, c.width, c.height);
+      parts.forEach(p => {
+        p.x += p.vx; p.y += p.vy; p.a += p.va; p.vy += 0.03;
+        ctx.save();
+        ctx.translate(p.x, p.y); ctx.rotate(p.a);
+        ctx.fillStyle = p.c;
+        ctx.fillRect(-p.r / 2, -p.r / 2, p.r, p.r * 0.6);
+        ctx.restore();
+      });
+      if (++frames < 300) requestAnimationFrame(frame);
+      else ctx.clearRect(0, 0, c.width, c.height);
+    })();
+  }
+
+  window.addEventListener("resize", () => {
+    const c = document.getElementById("confetti");
+    c.width = window.innerWidth; c.height = window.innerHeight;
+  });
+</script>
+</body>
+</html>
